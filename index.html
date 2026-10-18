@@ -271,7 +271,7 @@ try{const t=localStorage.getItem("talib_theme");if(t)document.documentElement.da
 async function boot(ses){
   user=ses?ses.user:null;
   const a=document.getElementById("auth"),o=document.getElementById("out");
-  if(!user){S=[];a.classList.add("on");o.style.display="none";render();return}
+  if(!user){S=[];ae.value="";ap.value="";authMsg("");a.classList.add("on");o.style.display="none";render();return}
   a.classList.remove("on");o.style.display="";o.textContent="خروج ("+user.email+")";
   await cloudLoad();render();
 }
