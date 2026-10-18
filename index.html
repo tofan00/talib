@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>طالب — جدول المحاضرات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#f6f7fb;--card:#fff;--tx:#1b1f2a;--mut:#6b7280;--bd:#e5e7eb;--pr:#4f46e5;--prt:#fff;--warn:#b45309;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1117;--card:#1a1d27;--tx:#eef0f6;--mut:#9aa1b2;--bd:#2c3140;--pr:#818cf8;--prt:#0f1117;--warn:#fbbf24}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f1117;--card:#1a1d27;--tx:#eef0f6;--mut:#9aa1b2;--bd:#2c3140;--pr:#818cf8;--prt:#0f1117;--warn:#fbbf24}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font-family:"Cairo",Tahoma,"Segoe UI",sans-serif;line-height:1.6}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:24px;color:var(--pr)}
+nav{display:flex;gap:4px;flex:1;min-width:230px}
+nav button{flex:1;border:0;background:transparent;color:var(--mut);font:inherit;font-weight:600;padding:6px 10px;border-radius:10px;cursor:pointer}
+nav button.on{background:var(--pr);color:var(--prt)}
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit;padding:6px 12px;border-radius:10px;cursor:pointer}
+.btn.pr{background:var(--pr);color:var(--prt);border-color:var(--pr);font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px}
+.hero{border-inline-start:6px solid var(--pr);margin-bottom:16px}
+.hero h2{margin:0 0 4px;font-size:18px}
+.mut{color:var(--mut);font-size:14px}
+.item{display:flex;gap:12px;align-items:center;margin-top:10px}
+.dot{width:6px;align-self:stretch;border-radius:6px;flex:none}
+.item .t{font-weight:600}
+.tag{font-size:12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:0 8px;margin-inline-start:6px}
+.live{color:#16a34a;font-weight:700}
+.grid-wrap{overflow-x:auto}
+.grid{display:grid;min-width:640px}
+.hcol{position:relative}
+.hlabel{position:absolute;inset-inline-end:6px;font-size:11px;color:var(--mut);transform:translateY(-50%)}
+.dh{text-align:center;font-weight:700;padding:8px 0;border-bottom:1px solid var(--bd)}
+.dh.today{color:var(--pr)}
+.dcol{position:relative;border-inline-start:1px solid var(--bd);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 55px,var(--bd) 55px,var(--bd) 56px)}
+.blk{position:absolute;inset-inline:3px;border-radius:10px;padding:4px 6px;color:#fff;font-size:12px;line-height:1.3;overflow:hidden;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.blk b{display:block;font-size:13px}
+.list{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.list .card{border-top:6px solid var(--c)}
+.list h3{margin:0}
+.row{display:flex;gap:8px;margin-top:10px}
+.empty{text-align:center;color:var(--mut);padding:30px}
+dialog{border:1px solid var(--bd);border-radius:18px;background:var(--card);color:var(--tx);width:min(480px,94vw);padding:18px;font-family:inherit}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+label{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;font-size:13px;padding:4px 12px;border-radius:20px;cursor:pointer}
+.chip.on{background:var(--pr);color:var(--prt);border-color:var(--pr)}
+.sw{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0}
+.sw.on{border-color:var(--tx)}
+.warn{color:var(--warn);font-size:13px;margin-top:8px;font-weight:600}
+.ov{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;align-items:center;justify-content:center;padding:16px}.ov.on{display:flex}.ov .card{width:min(400px,100%)}.msg{font-size:13px;margin-top:8px;color:var(--warn);min-height:20px}
+@media print{header,.row,.noprint{display:none!important}body{background:#fff}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+</head>
+<body>
+<header>
+  <div class="logo">طالب</div>
+  <nav id="nav"></nav>
+  <button class="btn" id="thm" title="الوضع الداكن">🌓</button>
+  <button class="btn" onclick="window.print()">🖨️ طباعة</button>
+  <button class="btn" id="out" style="display:none"></button>
+  <button class="btn pr" id="add">+ إضافة محاضرة</button>
+</header>
+<main id="main"></main>
+<div class="ov" id="auth"><div class="card"><div class="logo" style="text-align:center">طالب</div>
+<p class="mut" style="text-align:center">سجّل دخولك ليُحفظ جدولك باسمك على أي جهاز</p>
+<label>البريد الإلكتروني</label><input type="email" id="ae" autocomplete="email" dir="ltr">
+<label>كلمة المرور (6 أحرف على الأقل)</label><input type="password" id="ap" autocomplete="current-password" dir="ltr">
+<div class="msg" id="am"></div>
+<div class="row"><button class="btn pr" style="flex:1" id="li">دخول</button><button class="btn" style="flex:1" id="su">إنشاء حساب</button></div></div></div>
+
+<dialog id="dlg">
+  <form id="frm" method="dialog">
+    <h3 id="ft" style="margin:0 0 4px">محاضرة جديدة</h3>
+    <label>اسم المادة *</label><input id="fn" required>
+    <div class="two">
+      <div><label>رمز المادة</label><input id="fc"></div>
+      <div><label>الدكتور</label><input id="fi"></div>
+    </div>
+    <label>الأيام *</label><div class="chips" id="fd"></div>
+    <div class="two">
+      <div><label>من *</label><input type="time" id="fs" required value="08:00"></div>
+      <div><label>إلى *</label><input type="time" id="fe" required value="09:30"></div>
+    </div>
+    <div class="two">
+      <div><label>القاعة / المبنى</label><input id="fr"></div>
+      <div><label>النوع</label><select id="ft2"><option>محاضرة</option><option>مختبر</option><option>تمرين</option><option>شعبة</option></select></div>
+    </div>
+    <label>اللون</label><div class="chips" id="fcl"></div>
+    <div class="warn" id="fw"></div>
+    <div class="row" style="justify-content:flex-end">
+      <button type="button" class="btn" id="cn">إلغاء</button>
+      <button type="submit" class="btn pr">حفظ</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+const DAYS={6:"السبت",0:"الأحد",1:"الاثنين",2:"الثلاثاء",3:"الأربعاء",4:"الخميس",5:"الجمعة"};
+const ORDER=[6,0,1,2,3,4,5];
+const COLORS=["#4f46e5","#0891b2","#16a34a","#d97706","#dc2626","#c026d3","#0d9488","#64748b"];
+const KEY="talib_v1";
+const HH=56;
+let S=[],view="today",editId=null,fd=[],fcl=COLORS[0];
+
+const sample=()=>[
+ {id:1,name:"الرياضيات المتقدمة",code:"MATH201",inst:"د. أحمد",days:[6,1],start:"08:00",end:"09:30",room:"A-101",type:"محاضرة",color:COLORS[0]},
+ {id:2,name:"البرمجة بلغة Java",code:"CS202",inst:"د. سارة",days:[0,2],start:"10:00",end:"11:30",room:"مختبر 3",type:"مختبر",color:COLORS[1]},
+ {id:3,name:"قواعد البيانات",code:"CS310",inst:"د. خالد",days:[6,1],start:"11:00",end:"12:30",room:"B-204",type:"محاضرة",color:COLORS[2]},
+ {id:4,name:"اللغة الإنجليزية",code:"ENG101",inst:"د. ليلى",days:[0,2,4],start:"13:00",end:"14:00",room:"C-12",type:"محاضرة",color:COLORS[3]},
+ {id:5,name:"الفيزياء العامة",code:"PHY120",inst:"د. يوسف",days:[3],start:"09:00",end:"12:00",room:"مختبر 1",type:"مختبر",color:COLORS[4]}
+];
+function load(){try{const r=localStorage.getItem(KEY);if(r){const p=JSON.parse(r);if(Array.isArray(p))return p}else return sample()}catch(e){return sample()}return []}
+/* ===== إعدادات Supabase: ضع قيمك هنا ===== */
+const SB_URL="https://ehlorapygemhqelyhbjm.supabase.co",SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVobG9yYXB5Z2VtaHFlbHloYmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNTI0ODAsImV4cCI6MjEwNzkyODQ4MH0.UuPA47c__JRBQ3CzDNuBqJF2iMxFtP0JsY4uev9lk1Q";
+const ON=!SB_URL.includes("YOUR-")&&!SB_KEY.includes("YOUR-");
+let sb=null,user=null,lastUid=null;
+const ck=()=>KEY+(user?":"+user.id:"");
+function save(){try{localStorage.setItem(ck(),JSON.stringify(S))}catch(e){}}
+const note=t=>alert(t);
+async function cloudLoad(){
+  const{data,error}=await sb.from("sessions").select("id,data").order("created_at");
+  if(error){note("تعذّر تحميل البيانات: "+error.message);try{const c=JSON.parse(localStorage.getItem(ck()));if(Array.isArray(c))S=c}catch(e){}return}
+  S=data.map(r=>({...r.data,rid:r.id}));save();
+}
+async function cloudPut(o){
+  if(!ON||!user)return;
+  const{rid,...d}=o;
+  if(rid){const{error}=await sb.from("sessions").update({data:d}).eq("id",rid);if(error)note("تعذّر الحفظ: "+error.message)}
+  else{const{data,error}=await sb.from("sessions").insert({data:d}).select("id").single();if(error)note("تعذّر الحفظ: "+error.message);else{o.rid=data.id;save()}}
+}
+async function cloudDel(o){
+  if(!ON||!user||!o||!o.rid)return;
+  const{error}=await sb.from("sessions").delete().eq("id",o.rid);if(error)note("تعذّر الحذف: "+error.message);
+}
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const m=t=>{const[a,b]=t.split(":").map(Number);return a*60+b};
+const fmt=t=>{let[h,mi]=t.split(":").map(Number);const p=h>=12?"م":"ص";h=h%12||12;return h+":"+String(mi).padStart(2,"0")+" "+p};
+const dur=n=>{const h=Math.floor(n/60),r=n%60;return(h?h+" ساعة ":"")+(r?r+" دقيقة":"")||"أقل من دقيقة"};
+
+function conflicts(o){
+  const out=[];
+  S.forEach(s=>{if(s.id===o.id)return;
+    o.days.forEach(d=>{if(s.days.includes(d)&&m(o.start)<m(s.end)&&m(s.start)<m(o.end))out.push(s.name+" ("+DAYS[d]+")")})});
+  return out;
+}
+
+function nextSession(){
+  const now=new Date(),nm=now.getHours()*60+now.getMinutes();
+  let cur=null,nxt=null,best=1e9;
+  for(let k=0;k<8;k++){
+    const d=(now.getDay()+k)%7;
+    S.filter(s=>s.days.includes(d)).forEach(s=>{
+      if(k===0&&m(s.start)<=nm&&nm<m(s.end)){cur=s;return}
+      const diff=k*1440+m(s.start)-nm;
+      if(diff>0&&diff<best){best=diff;nxt={s,diff,k,d}}
+    });
+    if(nxt&&k>0)break;
+  }
+  return{cur,nxt};
+}
+
+function renderToday(){
+  const now=new Date(),d=now.getDay(),nm=now.getHours()*60+now.getMinutes();
+  const list=S.filter(s=>s.days.includes(d)).sort((a,b)=>m(a.start)-m(b.start));
+  const{cur,nxt}=nextSession();
+  let hero="";
+  if(cur){hero=`<div class="card hero" style="border-color:${cur.color}"><h2><span class="live">● جارية الآن</span> — ${esc(cur.name)}</h2><div class="mut">تنتهي بعد ${dur(m(cur.end)-nm)} · القاعة: ${esc(cur.room||"—")}</div></div>`}
+  else if(nxt){const w=nxt.k===0?"اليوم":nxt.k===1?"غدًا":"يوم "+DAYS[nxt.d];
+    hero=`<div class="card hero" style="border-color:${nxt.s.color}"><h2>المحاضرة القادمة: ${esc(nxt.s.name)}</h2><div class="mut">بعد ${dur(nxt.diff)} (${w} ${fmt(nxt.s.start)}) · القاعة: ${esc(nxt.s.room||"—")}</div></div>`}
+  else hero=`<div class="card hero"><h2>لا توجد محاضرات قادمة</h2><div class="mut">أضف محاضراتك من الزر بالأعلى.</div></div>`;
+  let body=`<div class="card"><h2 style="margin:0">محاضرات اليوم — ${DAYS[d]}</h2>`;
+  if(!list.length)body+=`<div class="empty">لا محاضرات اليوم 🎉</div>`;
+  list.forEach(s=>{body+=`<div class="item" onclick="openForm(${s.id})" style="cursor:pointer"><div class="dot" style="background:${s.color}"></div><div><div class="t">${esc(s.name)}<span class="tag">${esc(s.type)}</span></div><div class="mut">${fmt(s.start)} – ${fmt(s.end)} · ${esc(s.room||"—")}${s.inst?" · "+esc(s.inst):""}</div></div></div>`});
+  return hero+body+"</div>";
+}
+
+function renderWeek(){
+  if(!S.length)return`<div class="card empty">لا توجد محاضرات بعد. اضغط «إضافة محاضرة».</div>`;
+  const days=ORDER.filter(d=>d!==5||S.some(s=>s.days.includes(5)));
+  const h0=Math.min(8,...S.map(s=>Math.floor(m(s.start)/60)));
+  const h1=Math.max(16,...S.map(s=>Math.ceil(m(s.end)/60)));
+  const H=(h1-h0)*HH,today=new Date().getDay();
+  let g=`<div class="grid-wrap card"><div class="grid" style="grid-template-columns:52px repeat(${days.length},1fr)"><div class="dh"></div>`;
+  days.forEach(d=>g+=`<div class="dh ${d===today?"today":""}">${DAYS[d]}</div>`);
+  g+=`<div class="hcol" style="height:${H}px">`;
+  for(let h=h0;h<=h1;h++)g+=`<div class="hlabel" style="top:${(h-h0)*HH}px">${h>12?h-12:h}${h>=12?"م":"ص"}</div>`;
+  g+="</div>";
+  days.forEach(d=>{
+    g+=`<div class="dcol" style="height:${H}px">`;
+    S.filter(s=>s.days.includes(d)).forEach(s=>{
+      const top=(m(s.start)-h0*60)/60*HH,hh=(m(s.end)-m(s.start))/60*HH-2;
+      g+=`<div class="blk" onclick="openForm(${s.id})" style="top:${top}px;height:${hh}px;background:${s.color}"><b>${esc(s.name)}</b>${fmt(s.start)}<br>${esc(s.room||"")}</div>`;
+    });
+    g+="</div>";
+  });
+  return g+"</div></div>";
+}
+
+function renderList(){
+  if(!S.length)return`<div class="card empty">لا توجد مواد بعد.</div>`;
+  let h='<div class="list">';
+  S.slice().sort((a,b)=>a.name.localeCompare(b.name,"ar")).forEach(s=>{
+    h+=`<div class="card" style="--c:${s.color}"><h3>${esc(s.name)}</h3><div class="mut">${esc(s.code||"")} ${s.code&&s.inst?"·":""} ${esc(s.inst||"")}</div>
+    <div style="margin-top:8px">${s.days.slice().sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b)).map(d=>`<span class="tag">${DAYS[d]}</span>`).join("")}</div>
+    <div class="mut" style="margin-top:8px">${fmt(s.start)} – ${fmt(s.end)} · ${esc(s.room||"—")} · ${esc(s.type)}</div>
+    <div class="row"><button class="btn" onclick="openForm(${s.id})">تعديل</button><button class="btn" onclick="dup(${s.id})">نسخ</button><button class="btn" onclick="del(${s.id})">حذف</button></div></div>`;
+  });
+  return h+"</div>";
+}
+
+function render(){
+  document.getElementById("nav").innerHTML=[["today","اليوم"],["week","الأسبوع"],["list","المواد"]]
+    .map(([k,l])=>`<button class="${view===k?"on":""}" onclick="view='${k}';render()">${l}</button>`).join("");
+  document.getElementById("main").innerHTML=view==="today"?renderToday():view==="week"?renderWeek():renderList();
+}
+
+function chips(){
+  document.getElementById("fd").innerHTML=ORDER.map(d=>`<button type="button" class="chip ${fd.includes(d)?"on":""}" onclick="tgl(${d})">${DAYS[d]}</button>`).join("");
+  document.getElementById("fcl").innerHTML=COLORS.map(c=>`<button type="button" class="sw ${c===fcl?"on":""}" style="background:${c}" onclick="fcl='${c}';chips()"></button>`).join("");
+  checkWarn();
+}
+function tgl(d){fd=fd.includes(d)?fd.filter(x=>x!==d):fd.concat(d);chips()}
+function cur(){return{id:editId||0,days:fd,start:document.getElementById("fs").value||"00:00",end:document.getElementById("fe").value||"00:00"}}
+function checkWarn(){
+  const o=cur(),w=document.getElementById("fw");
+  if(m(o.end)<=m(o.start)){w.textContent="⚠️ وقت النهاية يجب أن يكون بعد وقت البداية";return}
+  const c=conflicts(o);
+  w.textContent=c.length?"⚠️ تعارض مع: "+c.join("، "):"";
+}
+
+const dlg=document.getElementById("dlg");
+function openForm(id){
+  editId=id||null;
+  const s=S.find(x=>x.id===id)||{name:"",code:"",inst:"",days:[],start:"08:00",end:"09:30",room:"",type:"محاضرة",color:COLORS[S.length%COLORS.length]};
+  document.getElementById("ft").textContent=id?"تعديل المحاضرة":"محاضرة جديدة";
+  fn.value=s.name;fc.value=s.code;fi.value=s.inst;fs.value=s.start;fe.value=s.end;fr.value=s.room;document.getElementById("ft2").value=s.type;
+  fd=s.days.slice();fcl=s.color;chips();
+  dlg.showModal();
+}
+document.getElementById("add").onclick=()=>openForm();
+document.getElementById("cn").onclick=()=>dlg.close();
+["fs","fe"].forEach(i=>document.getElementById(i).addEventListener("input",checkWarn));
+document.getElementById("frm").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(!fd.length){document.getElementById("fw").textContent="⚠️ اختر يومًا واحدًا على الأقل";return}
+  if(m(fe.value)<=m(fs.value)){checkWarn();return}
+  const o={id:editId||Date.now(),name:fn.value.trim(),code:fc.value.trim(),inst:fi.value.trim(),days:fd.slice(),start:fs.value,end:fe.value,room:fr.value.trim(),type:document.getElementById("ft2").value,color:fcl};
+  if(conflicts(o).length&&!confirm("يوجد تعارض في الوقت. هل تريد الحفظ رغم ذلك؟"))return;
+  const i=S.findIndex(x=>x.id===o.id);
+  if(i>=0){o.rid=S[i].rid;S[i]=o}else S.push(o);
+  save();dlg.close();render();cloudPut(o);
+});
+function del(id){if(confirm("حذف هذه المحاضرة؟")){const s=S.find(x=>x.id===id);S=S.filter(x=>x.id!==id);save();render();cloudDel(s)}}
+function dup(id){const s=S.find(x=>x.id===id);if(s){const n={...s,id:Date.now(),name:s.name+" (نسخة)",days:s.days.slice()};delete n.rid;S.push(n);save();render();cloudPut(n)}}
+
+document.getElementById("thm").onclick=()=>{
+  const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme=dark?"light":"dark";
+  try{localStorage.setItem("talib_theme",r.dataset.theme)}catch(e){}
+};
+try{const t=localStorage.getItem("talib_theme");if(t)document.documentElement.dataset.theme=t}catch(e){}
+
+async function boot(ses){
+  user=ses?ses.user:null;
+  const a=document.getElementById("auth"),o=document.getElementById("out");
+  if(!user){S=[];a.classList.add("on");o.style.display="none";render();return}
+  a.classList.remove("on");o.style.display="";o.textContent="خروج ("+user.email+")";
+  await cloudLoad();render();
+}
+const authMsg=t=>{document.getElementById("am").textContent=t};
+async function doAuth(up){
+  const email=ae.value.trim(),password=ap.value;
+  if(!email||password.length<6){authMsg("أدخل بريدًا صحيحًا وكلمة مرور من 6 أحرف على الأقل");return}
+  authMsg("جارٍ المعالجة...");
+  const r=up?await sb.auth.signUp({email,password}):await sb.auth.signInWithPassword({email,password});
+  if(r.error){authMsg(r.error.message);return}
+  if(up&&!r.data.session)authMsg("تم إنشاء الحساب. افتح بريدك واضغط رابط التأكيد ثم سجّل الدخول.");
+  else authMsg("");
+}
+if(!ON||!window.supabase){S=load();render()}
+else{
+  sb=window.supabase.createClient(SB_URL,SB_KEY);
+  li.onclick=()=>doAuth(false);su.onclick=()=>doAuth(true);
+  out.onclick=()=>sb.auth.signOut();
+  sb.auth.onAuthStateChange((ev,ses)=>{
+    const uid=ses&&ses.user?ses.user.id:null;
+    if(ev==="TOKEN_REFRESHED"||(uid===lastUid&&ev!=="INITIAL_SESSION"))return;
+    lastUid=uid;setTimeout(()=>boot(ses),0);
+  });
+}
+setInterval(()=>{if(view==="today"&&!dlg.open)render()},30000);
+</script>
+</body>
+</html>
